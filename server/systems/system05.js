@@ -6,6 +6,8 @@
 // R2: -14, -13, ... (increment +1)
 // R3: x2, x3, ... (increment +1)
 
+import { MAX_POSITION_VALUE } from '../config.js';
+
 export function generateSystem05Task() {
   // Generate three random operations with their changing values
   const { r1Op, r2Op, r3Op } = generateRandomOperationTypes();
@@ -57,8 +59,8 @@ export function generateSystem05Task() {
   const pos9 = applyOperation(pos8, { type: r2Op.type, value: r2Value2 });
   
   // Final validation
-  if (!Number.isInteger(pos8) || pos8 <= 0 || pos8 > 100000 || isNaN(pos8) || !isFinite(pos8) ||
-      !Number.isInteger(pos9) || pos9 <= 0 || pos9 > 100000 || isNaN(pos9) || !isFinite(pos9)) {
+  if (!Number.isInteger(pos8) || pos8 <= 0 || pos8 > MAX_POSITION_VALUE || isNaN(pos8) || !isFinite(pos8) ||
+      !Number.isInteger(pos9) || pos9 <= 0 || pos9 > MAX_POSITION_VALUE || isNaN(pos9) || !isFinite(pos9)) {
     // Retry if invalid
     return generateSystem05Task();
   }

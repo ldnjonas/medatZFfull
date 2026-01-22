@@ -5,6 +5,8 @@
 // Zw1 (positions 1, 3, 5, 7): 23, 29, 42, 62 with changing operation (+6, +13, +20)
 // Zw2 (positions 2, 4, 6): 28, 23, 18 with constant operation (-5)
 
+import { MAX_POSITION_VALUE } from '../config.js';
+
 export function generateSystem12Task() {
   // Generate operation types
   const { zw1Op, zw2Op } = generateRandomOperationTypes();
@@ -92,8 +94,8 @@ export function generateSystem12Task() {
   const pos9 = applyOperation(zw1Current, { type: zw1Op.type, value: zw1Value3 });
   
   // Final validation
-  if (!Number.isInteger(pos8) || pos8 <= 0 || pos8 > 100000 || isNaN(pos8) || !isFinite(pos8) ||
-      !Number.isInteger(pos9) || pos9 <= 0 || pos9 > 100000 || isNaN(pos9) || !isFinite(pos9)) {
+  if (!Number.isInteger(pos8) || pos8 <= 0 || pos8 > MAX_POSITION_VALUE || isNaN(pos8) || !isFinite(pos8) ||
+      !Number.isInteger(pos9) || pos9 <= 0 || pos9 > MAX_POSITION_VALUE || isNaN(pos9) || !isFinite(pos9)) {
     // Retry if invalid
     return generateSystem12Task();
   }

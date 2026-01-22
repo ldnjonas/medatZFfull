@@ -3,6 +3,8 @@
 // Pattern 2 (2er-Sprung): Differences between numbers 2 positions apart follow arithmetic progression
 // Z(n+2) = Z(n) + (Zw1 + (k * x)), where k is the step index (0, 1, 2, ...)
 
+import { MAX_POSITION_VALUE } from '../config.js';
+
 export function generateSystem15Task() {
   // Randomly choose between Pattern 1 (1er-Sprung) and Pattern 2 (2er-Sprung)
   const usePattern1 = Math.random() > 0.5;
@@ -75,8 +77,8 @@ function generatePattern1Task() {
       pos9 = applyOperation(pos9, { type: op2, value: value2 });
       
       // Final validation
-      if (!Number.isInteger(pos8) || pos8 <= 0 || pos8 > 100000 || isNaN(pos8) || !isFinite(pos8) ||
-          !Number.isInteger(pos9) || pos9 <= 0 || pos9 > 100000 || isNaN(pos9) || !isFinite(pos9)) {
+      if (!Number.isInteger(pos8) || pos8 <= 0 || pos8 > MAX_POSITION_VALUE || isNaN(pos8) || !isFinite(pos8) ||
+          !Number.isInteger(pos9) || pos9 <= 0 || pos9 > MAX_POSITION_VALUE || isNaN(pos9) || !isFinite(pos9)) {
         throw new Error('Invalid answer values');
       }
       
@@ -204,8 +206,8 @@ function generatePattern2Task() {
       let pos9 = applyOperation(sequence[6], { type: operationType, value: diff6 });
       
       // Final validation
-      if (!Number.isInteger(pos8) || pos8 <= 0 || pos8 > 100000 || isNaN(pos8) || !isFinite(pos8) ||
-          !Number.isInteger(pos9) || pos9 <= 0 || pos9 > 100000 || isNaN(pos9) || !isFinite(pos9)) {
+      if (!Number.isInteger(pos8) || pos8 <= 0 || pos8 > MAX_POSITION_VALUE || isNaN(pos8) || !isFinite(pos8) ||
+          !Number.isInteger(pos9) || pos9 <= 0 || pos9 > MAX_POSITION_VALUE || isNaN(pos9) || !isFinite(pos9)) {
         throw new Error('Invalid answer values');
       }
       

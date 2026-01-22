@@ -6,6 +6,8 @@
 // Position 3 → Position 6: Dr1 with 3x (x3): 28 * 3 = 84
 // Position 4 → Position 7: Dr1 with 4x (x4): 19 * 4 = 76
 
+import { MAX_POSITION_VALUE } from '../config.js';
+
 export function generateSystem14Task() {
   let attempts = 0;
   const maxAttempts = 10;
@@ -126,8 +128,8 @@ function generateSequence(validParams, operationType, baseValue) {
     const pos9 = applyOperation(sequence[5], { type: operationType, value: value6 });
     
     // Final validation
-    if (!Number.isInteger(pos8) || pos8 <= 0 || pos8 > 100000 || isNaN(pos8) || !isFinite(pos8) ||
-        !Number.isInteger(pos9) || pos9 <= 0 || pos9 > 100000 || isNaN(pos9) || !isFinite(pos9)) {
+    if (!Number.isInteger(pos8) || pos8 <= 0 || pos8 > MAX_POSITION_VALUE || isNaN(pos8) || !isFinite(pos8) ||
+        !Number.isInteger(pos9) || pos9 <= 0 || pos9 > MAX_POSITION_VALUE || isNaN(pos9) || !isFinite(pos9)) {
       return null;
     }
     

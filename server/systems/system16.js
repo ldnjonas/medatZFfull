@@ -6,6 +6,8 @@
 // 3rd differences: +2, +5, +8, +11
 // 4th differences: +3, +3, +3 (constant!)
 
+import { MAX_POSITION_VALUE } from '../config.js';
+
 export function generateSystem16Task() {
   let attempts = 0;
   const maxAttempts = 10;
@@ -95,8 +97,8 @@ export function generateSystem16Task() {
       const pos9 = pos8 + d1_7;
       
       // Final validation
-      if (!Number.isInteger(pos8) || pos8 <= 0 || pos8 > 100000 || isNaN(pos8) || !isFinite(pos8) ||
-          !Number.isInteger(pos9) || pos9 <= 0 || pos9 > 100000 || isNaN(pos9) || !isFinite(pos9)) {
+      if (!Number.isInteger(pos8) || pos8 <= 0 || pos8 > MAX_POSITION_VALUE || isNaN(pos8) || !isFinite(pos8) ||
+          !Number.isInteger(pos9) || pos9 <= 0 || pos9 > MAX_POSITION_VALUE || isNaN(pos9) || !isFinite(pos9)) {
         throw new Error('Invalid answer values');
       }
       

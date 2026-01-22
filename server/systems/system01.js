@@ -2,6 +2,8 @@
 // Operations can be: +n, -n, *n, /n (where n is a positive integer)
 // All results must be positive whole numbers
 
+import { MAX_POSITION_VALUE } from '../config.js';
+
 export function generateSystem01Task() {
   // Generate two random operations
   const { op1, op2 } = generateRandomOperations();
@@ -30,6 +32,13 @@ export function generateSystem01Task() {
   
   // Position 9: after position 8, apply op2
   const pos9 = applyOperation(pos8, op2);
+  
+  // Validate that pos8 and pos9 are within limits
+  if (!Number.isInteger(pos8) || pos8 <= 0 || pos8 > MAX_POSITION_VALUE || isNaN(pos8) || !isFinite(pos8) ||
+      !Number.isInteger(pos9) || pos9 <= 0 || pos9 > MAX_POSITION_VALUE || isNaN(pos9) || !isFinite(pos9)) {
+    // Retry if invalid
+    return generateSystem01Task();
+  }
   
   // Generate wrong answer pairs (pos8/pos9 combinations)
   const wrongAnswerPairs = generateWrongAnswerPairs(pos8, pos9, sequence, op1, op2);

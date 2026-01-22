@@ -6,6 +6,8 @@
 // R1 = 3, R3 = 37, R5 = 40
 // R3 + R1 = 37 + 3 = 40 = R5 ✓
 
+import { MAX_POSITION_VALUE } from '../config.js';
+
 export function generateSystem21Task() {
   let attempts = 0;
   const maxAttempts = 20;
@@ -127,8 +129,8 @@ function generateSequence() {
   const pos9 = pos8 + r8;
   
   // Final validation
-  if (!Number.isInteger(pos8) || pos8 <= 0 || pos8 > 100000 || isNaN(pos8) || !isFinite(pos8) ||
-      !Number.isInteger(pos9) || pos9 <= 0 || pos9 > 100000 || isNaN(pos9) || !isFinite(pos9)) {
+  if (!Number.isInteger(pos8) || pos8 <= 0 || pos8 > MAX_POSITION_VALUE || isNaN(pos8) || !isFinite(pos8) ||
+      !Number.isInteger(pos9) || pos9 <= 0 || pos9 > MAX_POSITION_VALUE || isNaN(pos9) || !isFinite(pos9)) {
     throw new Error('Invalid answer values');
   }
   

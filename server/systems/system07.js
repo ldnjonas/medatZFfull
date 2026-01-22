@@ -4,6 +4,8 @@
 // Example: 34, 19, 53, 34, 87, 53, 140
 // 34 + 19 = 53, 53 - 19 = 34, 34 + 53 = 87, 87 - 34 = 53, 53 + 87 = 140
 
+import { MAX_POSITION_VALUE } from '../config.js';
+
 export function generateSystem07Task() {
   // Generate two starting numbers
   const start1 = Math.floor(Math.random() * 40) + 10; // 10-49
@@ -47,8 +49,8 @@ export function generateSystem07Task() {
   const pos9 = pos8 + sequence[6];
   
   // Final validation
-  if (!Number.isInteger(pos8) || pos8 <= 0 || pos8 > 100000 || isNaN(pos8) || !isFinite(pos8) ||
-      !Number.isInteger(pos9) || pos9 <= 0 || pos9 > 100000 || isNaN(pos9) || !isFinite(pos9)) {
+  if (!Number.isInteger(pos8) || pos8 <= 0 || pos8 > MAX_POSITION_VALUE || isNaN(pos8) || !isFinite(pos8) ||
+      !Number.isInteger(pos9) || pos9 <= 0 || pos9 > MAX_POSITION_VALUE || isNaN(pos9) || !isFinite(pos9)) {
     // Retry if invalid
     return generateSystem07Task();
   }

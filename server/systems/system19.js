@@ -10,6 +10,8 @@
 // 108 → 117: 108 + (1+0+8) = 108 + 9 = 117 (digit sum)
 // 108 + 117 = 225 (Fibonacci)
 
+import { MAX_POSITION_VALUE } from '../config.js';
+
 export function generateSystem19Task() {
   // Randomly choose between standard and reverse pattern FIRST
   const useStandard = Math.random() > 0.5;
@@ -127,8 +129,8 @@ function generateStandardPattern() {
   const pos9 = sequence[6] + pos8;
   
   // Final validation
-  if (!Number.isInteger(pos8) || pos8 <= 0 || pos8 > 100000 || isNaN(pos8) || !isFinite(pos8) ||
-      !Number.isInteger(pos9) || pos9 <= 0 || pos9 > 100000 || isNaN(pos9) || !isFinite(pos9)) {
+  if (!Number.isInteger(pos8) || pos8 <= 0 || pos8 > MAX_POSITION_VALUE || isNaN(pos8) || !isFinite(pos8) ||
+      !Number.isInteger(pos9) || pos9 <= 0 || pos9 > MAX_POSITION_VALUE || isNaN(pos9) || !isFinite(pos9)) {
     throw new Error('Invalid answer values');
   }
   
@@ -208,8 +210,8 @@ function generateReversePattern() {
   const pos9 = sequence[6] + pos8;
   
   // Final validation
-  if (!Number.isInteger(pos8) || pos8 <= 0 || pos8 > 100000 || isNaN(pos8) || !isFinite(pos8) ||
-      !Number.isInteger(pos9) || pos9 <= 0 || pos9 > 100000 || isNaN(pos9) || !isFinite(pos9)) {
+  if (!Number.isInteger(pos8) || pos8 <= 0 || pos8 > MAX_POSITION_VALUE || isNaN(pos8) || !isFinite(pos8) ||
+      !Number.isInteger(pos9) || pos9 <= 0 || pos9 > MAX_POSITION_VALUE || isNaN(pos9) || !isFinite(pos9)) {
     throw new Error('Invalid answer values');
   }
   

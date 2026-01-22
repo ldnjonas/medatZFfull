@@ -7,6 +7,8 @@
 // Position 3 → Position 6: Dr1 (x6): 15 * 6 = 90
 // Position 4 → Position 7: Dr2 (+6): 102 + 6 = 108
 
+import { MAX_POSITION_VALUE } from '../config.js';
+
 export function generateSystem13Task() {
   // Generate two random operations (CONSTANT, do not change)
   const { dr1Op, dr2Op } = generateRandomOperations();
@@ -63,8 +65,8 @@ export function generateSystem13Task() {
   const pos9 = applyOperation(sequence[5], dr2Op);
   
   // Final validation
-  if (!Number.isInteger(pos8) || pos8 <= 0 || pos8 > 100000 || isNaN(pos8) || !isFinite(pos8) ||
-      !Number.isInteger(pos9) || pos9 <= 0 || pos9 > 100000 || isNaN(pos9) || !isFinite(pos9)) {
+  if (!Number.isInteger(pos8) || pos8 <= 0 || pos8 > MAX_POSITION_VALUE || isNaN(pos8) || !isFinite(pos8) ||
+      !Number.isInteger(pos9) || pos9 <= 0 || pos9 > MAX_POSITION_VALUE || isNaN(pos9) || !isFinite(pos9)) {
     // Retry if invalid
     return generateSystem13Task();
   }

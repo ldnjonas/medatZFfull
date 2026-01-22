@@ -4,6 +4,8 @@
 // Example: 5, 11, 12, 28, 51, 91, 170
 // 5 + 11 + 12 = 28, 11 + 12 + 28 = 51, 12 + 28 + 51 = 91, 28 + 51 + 91 = 170
 
+import { MAX_POSITION_VALUE } from '../config.js';
+
 export function generateSystem08Task() {
   // Generate three starting numbers
   const start1 = Math.floor(Math.random() * 15) + 3; // 3-17
@@ -42,8 +44,8 @@ export function generateSystem08Task() {
   const pos9 = sequence[5] + sequence[6] + pos8;
   
   // Final validation
-  if (!Number.isInteger(pos8) || pos8 <= 0 || pos8 > 100000 || isNaN(pos8) || !isFinite(pos8) ||
-      !Number.isInteger(pos9) || pos9 <= 0 || pos9 > 100000 || isNaN(pos9) || !isFinite(pos9)) {
+  if (!Number.isInteger(pos8) || pos8 <= 0 || pos8 > MAX_POSITION_VALUE || isNaN(pos8) || !isFinite(pos8) ||
+      !Number.isInteger(pos9) || pos9 <= 0 || pos9 > MAX_POSITION_VALUE || isNaN(pos9) || !isFinite(pos9)) {
     // Retry if invalid
     return generateSystem08Task();
   }

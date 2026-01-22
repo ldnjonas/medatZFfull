@@ -5,6 +5,8 @@
 // 52 → 59: 52 + (5+2) = 52 + 7 = 59
 // 59 → 73: 59 + (5+9) = 59 + 14 = 73
 
+import { MAX_POSITION_VALUE } from '../config.js';
+
 export function generateSystem17Task() {
   let attempts = 0;
   const maxAttempts = 10;
@@ -71,8 +73,8 @@ export function generateSystem17Task() {
       }
       
       // Final validation
-      if (!Number.isInteger(pos8) || pos8 <= 0 || pos8 > 100000 || isNaN(pos8) || !isFinite(pos8) ||
-          !Number.isInteger(pos9) || pos9 <= 0 || pos9 > 100000 || isNaN(pos9) || !isFinite(pos9)) {
+      if (!Number.isInteger(pos8) || pos8 <= 0 || pos8 > MAX_POSITION_VALUE || isNaN(pos8) || !isFinite(pos8) ||
+          !Number.isInteger(pos9) || pos9 <= 0 || pos9 > MAX_POSITION_VALUE || isNaN(pos9) || !isFinite(pos9)) {
         throw new Error('Invalid answer values');
       }
       

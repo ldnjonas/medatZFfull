@@ -4,6 +4,8 @@
 // Zw1 (positions 1, 3, 5, 7): 38, 45, 52, 59 with operation R1 (e.g., +7)
 // Zw2 (positions 2, 4, 6): 10, 20, 40 with operation R2 (e.g., x2)
 
+import { MAX_POSITION_VALUE } from '../config.js';
+
 export function generateSystem11Task() {
   // Generate two random operations
   const { op1, op2 } = generateRandomOperations();
@@ -47,8 +49,8 @@ export function generateSystem11Task() {
   const pos9 = applyOperation(zw1Current, op1);
   
   // Final validation
-  if (!Number.isInteger(pos8) || pos8 <= 0 || pos8 > 100000 || isNaN(pos8) || !isFinite(pos8) ||
-      !Number.isInteger(pos9) || pos9 <= 0 || pos9 > 100000 || isNaN(pos9) || !isFinite(pos9)) {
+  if (!Number.isInteger(pos8) || pos8 <= 0 || pos8 > MAX_POSITION_VALUE || isNaN(pos8) || !isFinite(pos8) ||
+      !Number.isInteger(pos9) || pos9 <= 0 || pos9 > MAX_POSITION_VALUE || isNaN(pos9) || !isFinite(pos9)) {
     // Retry if invalid
     return generateSystem11Task();
   }

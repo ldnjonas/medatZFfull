@@ -8,6 +8,8 @@
 // Position 4 + 5 → 6: Fibonacci: 44 + 48 = 92
 // Position 6 → 7: R2 (x2): 92 * 2 = 184
 
+import { MAX_POSITION_VALUE } from '../config.js';
+
 export function generateSystem20Task() {
   // All 6 possible orders (3-part cycle):
   // 1. R1, Fibonacci, R2
@@ -157,8 +159,8 @@ function generatePatternR1FibR2() {
   const pos9 = sequence[6] + pos8;
   
   // Final validation
-  if (!Number.isInteger(pos8) || pos8 <= 0 || pos8 > 100000 || isNaN(pos8) || !isFinite(pos8) ||
-      !Number.isInteger(pos9) || pos9 <= 0 || pos9 > 100000 || isNaN(pos9) || !isFinite(pos9)) {
+  if (!Number.isInteger(pos8) || pos8 <= 0 || pos8 > MAX_POSITION_VALUE || isNaN(pos8) || !isFinite(pos8) ||
+      !Number.isInteger(pos9) || pos9 <= 0 || pos9 > MAX_POSITION_VALUE || isNaN(pos9) || !isFinite(pos9)) {
     throw new Error('Invalid answer values');
   }
   
@@ -268,8 +270,8 @@ function generatePatternR2FibR1() {
   const pos9 = sequence[6] + pos8;
   
   // Final validation
-  if (!Number.isInteger(pos8) || pos8 <= 0 || pos8 > 100000 || isNaN(pos8) || !isFinite(pos8) ||
-      !Number.isInteger(pos9) || pos9 <= 0 || pos9 > 100000 || isNaN(pos9) || !isFinite(pos9)) {
+  if (!Number.isInteger(pos8) || pos8 <= 0 || pos8 > MAX_POSITION_VALUE || isNaN(pos8) || !isFinite(pos8) ||
+      !Number.isInteger(pos9) || pos9 <= 0 || pos9 > MAX_POSITION_VALUE || isNaN(pos9) || !isFinite(pos9)) {
     throw new Error('Invalid answer values');
   }
   

@@ -8,6 +8,8 @@
 // Z6 = Z4 * 4 = 96 * 4 = 384
 // Z7 = Z5 + Z6 = 133 + 384 = 517
 
+import { MAX_POSITION_VALUE } from '../config.js';
+
 export function generateSystem18Task() {
   let attempts = 0;
   const maxAttempts = 10;
@@ -91,8 +93,8 @@ function generateStandardPattern() {
   const pos9 = sequence[6] + pos8;
   
   // Final validation
-  if (!Number.isInteger(pos8) || pos8 <= 0 || pos8 > 100000 || isNaN(pos8) || !isFinite(pos8) ||
-      !Number.isInteger(pos9) || pos9 <= 0 || pos9 > 100000 || isNaN(pos9) || !isFinite(pos9)) {
+  if (!Number.isInteger(pos8) || pos8 <= 0 || pos8 > MAX_POSITION_VALUE || isNaN(pos8) || !isFinite(pos8) ||
+      !Number.isInteger(pos9) || pos9 <= 0 || pos9 > MAX_POSITION_VALUE || isNaN(pos9) || !isFinite(pos9)) {
     throw new Error('Invalid answer values');
   }
   
@@ -167,8 +169,8 @@ function generateReversePattern() {
   const pos9 = sequence[6] * multiplier;
   
   // Final validation
-  if (!Number.isInteger(pos8) || pos8 <= 0 || pos8 > 100000 || isNaN(pos8) || !isFinite(pos8) ||
-      !Number.isInteger(pos9) || pos9 <= 0 || pos9 > 100000 || isNaN(pos9) || !isFinite(pos9)) {
+  if (!Number.isInteger(pos8) || pos8 <= 0 || pos8 > MAX_POSITION_VALUE || isNaN(pos8) || !isFinite(pos8) ||
+      !Number.isInteger(pos9) || pos9 <= 0 || pos9 > MAX_POSITION_VALUE || isNaN(pos9) || !isFinite(pos9)) {
     throw new Error('Invalid answer values');
   }
   

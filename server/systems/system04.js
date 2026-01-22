@@ -4,6 +4,8 @@
 // Example: 32, 16, 64, 80, 40, 160, 176
 // Pattern: /2, x4, +16, /2, x4, +16
 
+import { MAX_POSITION_VALUE } from '../config.js';
+
 export function generateSystem04Task() {
   // Generate three random operations
   const { op1, op2, op3 } = generateRandomOperations();
@@ -38,8 +40,8 @@ export function generateSystem04Task() {
   const pos9 = applyOperation(pos8, op2);
   
   // Final validation
-  if (!Number.isInteger(pos8) || pos8 <= 0 || pos8 > 100000 || isNaN(pos8) || !isFinite(pos8) ||
-      !Number.isInteger(pos9) || pos9 <= 0 || pos9 > 100000 || isNaN(pos9) || !isFinite(pos9)) {
+  if (!Number.isInteger(pos8) || pos8 <= 0 || pos8 > MAX_POSITION_VALUE || isNaN(pos8) || !isFinite(pos8) ||
+      !Number.isInteger(pos9) || pos9 <= 0 || pos9 > MAX_POSITION_VALUE || isNaN(pos9) || !isFinite(pos9)) {
     // Retry if invalid
     return generateSystem04Task();
   }

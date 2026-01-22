@@ -7,6 +7,8 @@
 // Z6 = Z5 + Z3 = 25 + 10 = 35
 // Z7 = Z6 + Z4 = 35 + 17 = 52
 
+import { MAX_POSITION_VALUE } from '../config.js';
+
 export function generateSystem09Task() {
   // Generate three starting numbers (Z1, Z2, Z3)
   const z1 = Math.floor(Math.random() * 20) + 5; // 5-24
@@ -38,8 +40,8 @@ export function generateSystem09Task() {
   const pos9 = pos8 + sequence[5];
   
   // Final validation
-  if (!Number.isInteger(pos8) || pos8 <= 0 || pos8 > 100000 || isNaN(pos8) || !isFinite(pos8) ||
-      !Number.isInteger(pos9) || pos9 <= 0 || pos9 > 100000 || isNaN(pos9) || !isFinite(pos9)) {
+  if (!Number.isInteger(pos8) || pos8 <= 0 || pos8 > MAX_POSITION_VALUE || isNaN(pos8) || !isFinite(pos8) ||
+      !Number.isInteger(pos9) || pos9 <= 0 || pos9 > MAX_POSITION_VALUE || isNaN(pos9) || !isFinite(pos9)) {
     // Retry if invalid
     return generateSystem09Task();
   }
