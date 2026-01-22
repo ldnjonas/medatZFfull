@@ -3,8 +3,8 @@ import './App.css';
 
 function App() {
   const [systems, setSystems] = useState([]);
-  const [selectedSystem, setSelectedSystem] = useState('01');
-  const [taskCount, setTaskCount] = useState(1);
+  const [selectedSystems, setSelectedSystems] = useState(new Set(['01'])); // Set of selected system IDs
+  const [totalTaskCount, setTotalTaskCount] = useState(100);
   const [loading, setLoading] = useState(false);
   const [serverError, setServerError] = useState(false);
 
@@ -44,7 +44,30 @@ function App() {
     }
   };
 
+  const toggleSystem = (systemId) => {
+    const newSelected = new Set(selectedSystems);
+    if (newSelected.has(systemId)) {
+      newSelected.delete(systemId);
+    } else {
+      newSelected.add(systemId);
+    }
+    setSelectedSystems(newSelected);
+  };
+
+  const selectAll = () => {
+    setSelectedSystems(new Set(systems.map(s => s.id)));
+  };
+
+  const deselectAll = () => {
+    setSelectedSystems(new Set());
+  };
+
   const generatePDF = async () => {
+    if (selectedSystems.size === 0) {
+      alert('Bitte wählen Sie mindestens ein System aus.');
+      return;
+    }
+
     setLoading(true);
     try {
       const response = await fetch('http://localhost:3001/api/generate-pdf', {
@@ -53,8 +76,8 @@ function App() {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          system: selectedSystem,
-          count: taskCount,
+          systems: Array.from(selectedSystems),
+          totalCount: totalTaskCount,
         }),
       });
 
@@ -66,7 +89,7 @@ function App() {
       const url = window.URL.createObjectURL(blob);
       const a = document.createElement('a');
       a.href = url;
-      a.download = `medat-system-${selectedSystem}.pdf`;
+      a.download = `medat-gemischte-systeme.pdf`;
       document.body.appendChild(a);
       a.click();
       window.URL.revokeObjectURL(url);
@@ -100,46 +123,118 @@ function App() {
               ⚠️ Server nicht erreichbar. Bitte starten Sie den Server mit <code>npm run server</code> im server-Verzeichnis.
             </div>
           )}
+          
           <div className="form-group">
-            <label htmlFor="system-select">System auswählen:</label>
-            <select
-              id="system-select"
-              value={selectedSystem}
-              onChange={(e) => setSelectedSystem(e.target.value)}
-              className="select-input"
-              disabled={systems.length === 0}
-            >
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.5rem' }}>
+              <label htmlFor="system-select">Systeme auswählen ({selectedSystems.size} ausgewählt):</label>
+              <div>
+                <button 
+                  onClick={selectAll}
+                  style={{ 
+                    marginRight: '0.5rem', 
+                    padding: '0.25rem 0.5rem', 
+                    fontSize: '0.875rem',
+                    background: '#f0f0f0',
+                    border: '1px solid #ccc',
+                    borderRadius: '4px',
+                    cursor: 'pointer'
+                  }}
+                >
+                  Alle auswählen
+                </button>
+                <button 
+                  onClick={deselectAll}
+                  style={{ 
+                    padding: '0.25rem 0.5rem', 
+                    fontSize: '0.875rem',
+                    background: '#f0f0f0',
+                    border: '1px solid #ccc',
+                    borderRadius: '4px',
+                    cursor: 'pointer'
+                  }}
+                >
+                  Alle abwählen
+                </button>
+              </div>
+            </div>
+            <div style={{ 
+              maxHeight: '300px', 
+              overflowY: 'auto', 
+              border: '1px solid #ddd', 
+              borderRadius: '8px', 
+              padding: '1rem',
+              background: '#fafafa'
+            }}>
               {systems.length === 0 ? (
-                <option>Lade Systeme...</option>
+                <div>Lade Systeme...</div>
               ) : (
                 systems.map((system) => (
-                  <option key={system.id} value={system.id}>
-                    {system.name} - {system.description}
-                  </option>
+                  <label 
+                    key={system.id} 
+                    style={{ 
+                      display: 'flex', 
+                      alignItems: 'center', 
+                      padding: '0.5rem',
+                      cursor: 'pointer',
+                      borderRadius: '4px',
+                      marginBottom: '0.25rem',
+                      background: selectedSystems.has(system.id) ? '#e3f2fd' : 'transparent'
+                    }}
+                    onMouseEnter={(e) => {
+                      if (!selectedSystems.has(system.id)) {
+                        e.currentTarget.style.background = '#f5f5f5';
+                      }
+                    }}
+                    onMouseLeave={(e) => {
+                      if (!selectedSystems.has(system.id)) {
+                        e.currentTarget.style.background = 'transparent';
+                      }
+                    }}
+                  >
+                    <input
+                      type="checkbox"
+                      checked={selectedSystems.has(system.id)}
+                      onChange={() => toggleSystem(system.id)}
+                      style={{ marginRight: '0.75rem', width: '18px', height: '18px', cursor: 'pointer' }}
+                    />
+                    <div>
+                      <strong>{system.name}</strong>
+                      <div style={{ fontSize: '0.875rem', color: '#666', marginTop: '0.25rem' }}>
+                        {system.description}
+                      </div>
+                    </div>
+                  </label>
                 ))
               )}
-            </select>
+            </div>
           </div>
 
           <div className="form-group">
-            <label htmlFor="task-count">Anzahl der Aufgaben:</label>
+            <label htmlFor="task-count">Anzahl der Aufgaben insgesamt:</label>
             <input
               id="task-count"
               type="number"
               min="1"
-              max="20"
-              value={taskCount}
-              onChange={(e) => setTaskCount(parseInt(e.target.value) || 1)}
+              max="1000"
+              value={totalTaskCount}
+              onChange={(e) => setTotalTaskCount(parseInt(e.target.value) || 100)}
               className="number-input"
             />
+            <div style={{ fontSize: '0.875rem', color: '#666', marginTop: '0.25rem' }}>
+              Die Aufgaben werden basierend auf den konfigurierten Wahrscheinlichkeiten der ausgewählten Systeme verteilt.
+            </div>
           </div>
 
           <button
             onClick={generatePDF}
-            disabled={loading}
+            disabled={loading || selectedSystems.size === 0}
             className="generate-button"
+            style={{ 
+              opacity: selectedSystems.size === 0 ? 0.5 : 1,
+              cursor: selectedSystems.size === 0 ? 'not-allowed' : 'pointer'
+            }}
           >
-            {loading ? 'PDF wird generiert...' : 'PDF generieren'}
+            {loading ? 'PDF wird generiert...' : `PDF generieren (${totalTaskCount} Aufgaben)`}
           </button>
 
           <div className="info-box">

@@ -31,6 +31,7 @@ import { generateSystem28Task } from './systems/system28.js';
 import { generateSystem29Task } from './systems/system29.js';
 import { generateSystem30Task } from './systems/system30.js';
 import { generateSystem31Task } from './systems/system31.js';
+import { selectSystemByProbability, systemProbabilities } from './systemProbabilities.js';
 
 const app = express();
 const PORT = 3001;
@@ -42,45 +43,63 @@ app.use(express.json());
 // Starting sequence: 34, 18, 36, 20, 40, 24, 48
 // Next: 48 - 16 = 32, then 32 * 2 = 64
 
-app.post('/api/generate-pdf', async (req, res) => {
-  try {
-    const { system, count = 1 } = req.body;
-    
-    let tasks = [];
-    
-    if (system === '01') {
-      for (let i = 0; i < count; i++) {
-        try {
-          const task = generateSystem01Task();
-          if (task && task.sequence && task.correctAnswer && task.options) {
-            tasks.push(task);
-          }
-        } catch (error) {
-          console.error(`Error generating task ${i + 1} for system 01:`, error);
-          // Skip this task and continue
-        }
-      }
-    } else if (system === '02') {
-      for (let i = 0; i < count; i++) {
-        try {
-          const task = generateSystem02Task();
-          if (task && task.sequence && task.correctAnswer && task.options) {
-            tasks.push(task);
-          }
-        } catch (error) {
-          console.error(`Error generating task ${i + 1} for system 02:`, error);
-          // Skip this task and continue
-        }
-      }
-    } else if (system === '03') {
-      for (let i = 0; i < count; i++) {
+// Helper function to get generator function for a system
+function getSystemGenerator(systemId) {
+  const generators = {
+    '01': generateSystem01Task,
+    '02': generateSystem02Task,
+    '03': generateSystem03Task,
+    '04': generateSystem04Task,
+    '05': generateSystem05Task,
+    '06': generateSystem06Task,
+    '07': generateSystem07Task,
+    '08': generateSystem08Task,
+    '09': generateSystem09Task,
+    '10': generateSystem10Task,
+    '11': generateSystem11Task,
+    '12': generateSystem12Task,
+    '13': generateSystem13Task,
+    '14': generateSystem14Task,
+    '15': generateSystem15Task,
+    '16': generateSystem16Task,
+    '17': generateSystem17Task,
+    '18': generateSystem18Task,
+    '19': generateSystem19Task,
+    '20': generateSystem20Task,
+    '21': generateSystem21Task,
+    '22': generateSystem22Task,
+    '23': generateSystem23Task,
+    '24': generateSystem24Task,
+    '25': generateSystem25Task,
+    '26': generateSystem26Task,
+    '28': generateSystem28Task,
+    '29': generateSystem29Task,
+    '30': generateSystem30Task,
+    '31': generateSystem31Task,
+  };
+  return generators[systemId];
+}
+
+// Helper function to generate tasks for a single system
+async function generateTasksForSystem(systemId, count) {
+  const generator = getSystemGenerator(systemId);
+  if (!generator) {
+    throw new Error(`System ${systemId} not found`);
+  }
+  
+  const tasks = [];
+  for (let i = 0; i < count; i++) {
+    try {
+      let task;
+      
+      // System 03 has special validation, so we need to handle it differently
+      if (systemId === '03') {
         let taskGenerated = false;
         let attempts = 0;
         
-        // Try up to 10 times to generate a valid task
         while (!taskGenerated && attempts < 10) {
           try {
-            const task = generateSystem03Task();
+            task = generator();
             
             // Validate task structure
             if (task && 
@@ -106,361 +125,95 @@ app.post('/api/generate-pdf', async (req, res) => {
               task.correctAnswer.position9 <= 100000;
               
               if (allValid) {
-                tasks.push(task);
                 taskGenerated = true;
               }
             }
           } catch (error) {
-            console.error(`Error generating task ${i + 1} for system 03 (attempt ${attempts + 1}):`, error);
+            // Continue to next attempt
           }
           attempts++;
         }
         
         if (!taskGenerated) {
           console.error(`Failed to generate task ${i + 1} for system 03 after 10 attempts`);
+          continue;
         }
+      } else {
+        task = generator();
       }
-    } else if (system === '04') {
-      for (let i = 0; i < count; i++) {
-        try {
-          const task = generateSystem04Task();
-          if (task && task.sequence && task.correctAnswer && task.options) {
-            tasks.push(task);
-          }
-        } catch (error) {
-          console.error(`Error generating task ${i + 1} for system 04:`, error);
-          // Skip this task and continue
-        }
+      
+      if (task && task.sequence && task.correctAnswer && task.options) {
+        tasks.push({ ...task, systemId }); // Add systemId to each task
       }
-    } else if (system === '05') {
-      for (let i = 0; i < count; i++) {
-        try {
-          const task = generateSystem05Task();
-          if (task && task.sequence && task.correctAnswer && task.options) {
-            tasks.push(task);
-          }
-        } catch (error) {
-          console.error(`Error generating task ${i + 1} for system 05:`, error);
-          // Skip this task and continue
-        }
-      }
-    } else if (system === '06') {
-      for (let i = 0; i < count; i++) {
-        try {
-          const task = generateSystem06Task();
-          if (task && task.sequence && task.correctAnswer && task.options) {
-            tasks.push(task);
-          }
-        } catch (error) {
-          console.error(`Error generating task ${i + 1} for system 06:`, error);
-          // Skip this task and continue
-        }
-      }
-    } else if (system === '07') {
-      for (let i = 0; i < count; i++) {
-        try {
-          const task = generateSystem07Task();
-          if (task && task.sequence && task.correctAnswer && task.options) {
-            tasks.push(task);
-          }
-        } catch (error) {
-          console.error(`Error generating task ${i + 1} for system 07:`, error);
-          // Skip this task and continue
-        }
-      }
-    } else if (system === '08') {
-      for (let i = 0; i < count; i++) {
-        try {
-          const task = generateSystem08Task();
-          if (task && task.sequence && task.correctAnswer && task.options) {
-            tasks.push(task);
-          }
-        } catch (error) {
-          console.error(`Error generating task ${i + 1} for system 08:`, error);
-          // Skip this task and continue
-        }
-      }
-    } else if (system === '09') {
-      for (let i = 0; i < count; i++) {
-        try {
-          const task = generateSystem09Task();
-          if (task && task.sequence && task.correctAnswer && task.options) {
-            tasks.push(task);
-          }
-        } catch (error) {
-          console.error(`Error generating task ${i + 1} for system 09:`, error);
-          // Skip this task and continue
-        }
-      }
-    } else if (system === '10') {
-      for (let i = 0; i < count; i++) {
-        try {
-          const task = generateSystem10Task();
-          if (task && task.sequence && task.correctAnswer && task.options) {
-            tasks.push(task);
-          }
-        } catch (error) {
-          console.error(`Error generating task ${i + 1} for system 10:`, error);
-          // Skip this task and continue
-        }
-      }
-    } else if (system === '11') {
-      for (let i = 0; i < count; i++) {
-        try {
-          const task = generateSystem11Task();
-          if (task && task.sequence && task.correctAnswer && task.options) {
-            tasks.push(task);
-          }
-        } catch (error) {
-          console.error(`Error generating task ${i + 1} for system 11:`, error);
-          // Skip this task and continue
-        }
-      }
-    } else if (system === '12') {
-      for (let i = 0; i < count; i++) {
-        try {
-          const task = generateSystem12Task();
-          if (task && task.sequence && task.correctAnswer && task.options) {
-            tasks.push(task);
-          }
-        } catch (error) {
-          console.error(`Error generating task ${i + 1} for system 12:`, error);
-          // Skip this task and continue
-        }
-      }
-    } else if (system === '13') {
-      for (let i = 0; i < count; i++) {
-        try {
-          const task = generateSystem13Task();
-          if (task && task.sequence && task.correctAnswer && task.options) {
-            tasks.push(task);
-          }
-        } catch (error) {
-          console.error(`Error generating task ${i + 1} for system 13:`, error);
-          // Skip this task and continue
-        }
-      }
-    } else if (system === '14') {
-      for (let i = 0; i < count; i++) {
-        try {
-          const task = generateSystem14Task();
-          if (task && task.sequence && task.correctAnswer && task.options) {
-            tasks.push(task);
-          }
-        } catch (error) {
-          console.error(`Error generating task ${i + 1} for system 14:`, error);
-          // Skip this task and continue
-        }
-      }
-    } else if (system === '15') {
-      for (let i = 0; i < count; i++) {
-        try {
-          const task = generateSystem15Task();
-          if (task && task.sequence && task.correctAnswer && task.options) {
-            tasks.push(task);
-          }
-        } catch (error) {
-          console.error(`Error generating task ${i + 1} for system 15:`, error);
-          // Skip this task and continue
-        }
-      }
-    } else if (system === '16') {
-      for (let i = 0; i < count; i++) {
-        try {
-          const task = generateSystem16Task();
-          if (task && task.sequence && task.correctAnswer && task.options) {
-            tasks.push(task);
-          }
-        } catch (error) {
-          console.error(`Error generating task ${i + 1} for system 16:`, error);
-          // Skip this task and continue
-        }
-      }
-    } else if (system === '17') {
-      for (let i = 0; i < count; i++) {
-        try {
-          const task = generateSystem17Task();
-          if (task && task.sequence && task.correctAnswer && task.options) {
-            tasks.push(task);
-          }
-        } catch (error) {
-          console.error(`Error generating task ${i + 1} for system 17:`, error);
-          // Skip this task and continue
-        }
-      }
-    } else if (system === '18') {
-      for (let i = 0; i < count; i++) {
-        try {
-          const task = generateSystem18Task();
-          if (task && task.sequence && task.correctAnswer && task.options) {
-            tasks.push(task);
-          }
-        } catch (error) {
-          console.error(`Error generating task ${i + 1} for system 18:`, error);
-          // Skip this task and continue
-        }
-      }
-    } else if (system === '19') {
-      for (let i = 0; i < count; i++) {
-        try {
-          const task = generateSystem19Task();
-          if (task && task.sequence && task.correctAnswer && task.options) {
-            tasks.push(task);
-          }
-        } catch (error) {
-          console.error(`Error generating task ${i + 1} for system 19:`, error);
-          // Skip this task and continue
-        }
-      }
-    } else if (system === '20') {
-      for (let i = 0; i < count; i++) {
-        try {
-          const task = generateSystem20Task();
-          if (task && task.sequence && task.correctAnswer && task.options) {
-            tasks.push(task);
-          }
-        } catch (error) {
-          console.error(`Error generating task ${i + 1} for system 20:`, error);
-          // Skip this task and continue
-        }
-      }
-    } else if (system === '21') {
-      for (let i = 0; i < count; i++) {
-        try {
-          const task = generateSystem21Task();
-          if (task && task.sequence && task.correctAnswer && task.options) {
-            tasks.push(task);
-          }
-        } catch (error) {
-          console.error(`Error generating task ${i + 1} for system 21:`, error);
-          // Skip this task and continue
-        }
-      }
-    } else if (system === '22') {
-      for (let i = 0; i < count; i++) {
-        try {
-          const task = generateSystem22Task();
-          if (task && task.sequence && task.correctAnswer && task.options) {
-            tasks.push(task);
-          }
-        } catch (error) {
-          console.error(`Error generating task ${i + 1} for system 22:`, error);
-          // Skip this task and continue
-        }
-      }
-    } else if (system === '23') {
-      for (let i = 0; i < count; i++) {
-        try {
-          const task = generateSystem23Task();
-          if (task && task.sequence && task.correctAnswer && task.options) {
-            tasks.push(task);
-          }
-        } catch (error) {
-          console.error(`Error generating task ${i + 1} for system 23:`, error);
-          // Skip this task and continue
-        }
-      }
-    } else if (system === '24') {
-      for (let i = 0; i < count; i++) {
-        try {
-          const task = generateSystem24Task();
-          if (task && task.sequence && task.correctAnswer && task.options) {
-            tasks.push(task);
-          }
-        } catch (error) {
-          console.error(`Error generating task ${i + 1} for system 24:`, error);
-          // Skip this task and continue
-        }
-      }
-    } else if (system === '25') {
-      for (let i = 0; i < count; i++) {
-        try {
-          const task = generateSystem25Task();
-          if (task && task.sequence && task.correctAnswer && task.options) {
-            tasks.push(task);
-          }
-        } catch (error) {
-          console.error(`Error generating task ${i + 1} for system 25:`, error);
-          // Skip this task and continue
-        }
-      }
-    } else if (system === '26') {
-      for (let i = 0; i < count; i++) {
-        try {
-          const task = generateSystem26Task();
-          if (task && task.sequence && task.correctAnswer && task.options) {
-            tasks.push(task);
-          }
-        } catch (error) {
-          console.error(`Error generating task ${i + 1} for system 26:`, error);
-          // Skip this task and continue
-        }
-      }
-    } else if (system === '28') {
-      for (let i = 0; i < count; i++) {
-        try {
-          const task = generateSystem28Task();
-          if (task && task.sequence && task.correctAnswer && task.options) {
-            tasks.push(task);
-          }
-        } catch (error) {
-          console.error(`Error generating task ${i + 1} for system 28:`, error);
-          // Skip this task and continue
-        }
-      }
-    } else if (system === '29') {
-      for (let i = 0; i < count; i++) {
-        try {
-          const task = generateSystem29Task();
-          if (task && task.sequence && task.correctAnswer && task.options) {
-            tasks.push(task);
-          }
-        } catch (error) {
-          console.error(`Error generating task ${i + 1} for system 29:`, error);
-          // Skip this task and continue
-        }
-      }
-    } else if (system === '30') {
-      for (let i = 0; i < count; i++) {
-        try {
-          const task = generateSystem30Task();
-          if (task && task.sequence && task.correctAnswer && task.options) {
-            tasks.push(task);
-          }
-        } catch (error) {
-          console.error(`Error generating task ${i + 1} for system 30:`, error);
-          // Skip this task and continue
-        }
-      }
-    } else if (system === '31') {
-      for (let i = 0; i < count; i++) {
-        try {
-          const task = generateSystem31Task();
-          if (task && task.sequence && task.correctAnswer && task.options) {
-            tasks.push(task);
-          }
-        } catch (error) {
-          console.error(`Error generating task ${i + 1} for system 31:`, error);
-          // Skip this task and continue
-        }
-      }
-    } else {
-      return res.status(400).json({ error: 'System not implemented yet' });
+    } catch (error) {
+      console.error(`Error generating task ${i + 1} for system ${systemId}:`, error);
+      // Skip this task and continue
     }
+  }
+  return tasks;
+}
+
+// Shuffle array function
+function shuffleArray(array) {
+  const shuffled = [...array];
+  for (let i = shuffled.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+  }
+  return shuffled;
+}
+
+app.post('/api/generate-pdf', async (req, res) => {
+  try {
+    const { system, systems, totalCount = 100 } = req.body;
+    
+    let tasks = [];
+    
+    // Support both old format (single system) and new format (multiple systems)
+    const systemsToGenerate = systems || (system ? [system] : []);
+    
+    if (systemsToGenerate.length === 0) {
+      return res.status(400).json({ error: 'No systems specified' });
+    }
+    
+    // Generate totalCount tasks, distributed by probability
+    for (let i = 0; i < totalCount; i++) {
+      try {
+        // Select a system based on probabilities
+        const selectedSystemId = selectSystemByProbability(systemsToGenerate);
+        
+        // Generate one task for the selected system
+        const systemTasks = await generateTasksForSystem(selectedSystemId, 1);
+        if (systemTasks.length > 0) {
+          tasks.push(systemTasks[0]);
+        }
+      } catch (error) {
+        console.error(`Error generating task ${i + 1}:`, error);
+        // Continue with next task
+      }
+    }
+    
+    // Shuffle tasks to mix them (optional, but ensures randomness)
+    tasks = shuffleArray(tasks);
     
     if (tasks.length === 0) {
       return res.status(500).json({ error: 'Failed to generate any valid tasks' });
     }
     
-    const pdfBuffer = await generatePDF(tasks, system);
+    // Generate PDF with mixed systems
+    const pdfBuffer = await generatePDF(tasks, systemsToGenerate.length > 1 ? 'gemischt' : systemsToGenerate[0]);
     
     res.setHeader('Content-Type', 'application/pdf');
-    res.setHeader('Content-Disposition', `attachment; filename=medat-system-${system}.pdf`);
+    res.setHeader('Content-Disposition', `attachment; filename=medat-${systemsToGenerate.length > 1 ? 'gemischte-systeme' : `system-${systemsToGenerate[0]}`}.pdf`);
     res.send(pdfBuffer);
   } catch (error) {
     console.error('Error generating PDF:', error);
     res.status(500).json({ error: 'Failed to generate PDF: ' + error.message });
   }
+});
+
+app.get('/api/probabilities', (req, res) => {
+  res.json({ probabilities: systemProbabilities });
 });
 
 app.get('/api/systems', (req, res) => {
